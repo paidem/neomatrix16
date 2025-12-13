@@ -6,6 +6,7 @@
 #include <WiFiManager.h>
 #include "time.h"
 #include <FastLED_NeoMatrix.h>
+#include "settings.h"
 
 // Turn on debug statements to the serial output
 #define DEBUG 1
@@ -23,19 +24,6 @@
   #define PRINTS(x)
   #define PRINTX(x)
 #endif
-
-#define NTP_SERVER "pool.ntp.org"
-#define GMT_OFFSET 7200
-#define DAYLIGHT_OFFSET 3600
-
-
-#define DATAPIN 13
-#define mw 16
-#define mh 16
-#define MAX_BRIGHTNESS 90
-#define ANIMATION_SPEED 150        // Speed in percent compared to original animation speed
-int animation_change_interval = 5; // Time in seconds to change to the next animation. Signed so minMax works correctly on decrements
-#define NUMMATRIX (mw * mh)
 
 CRGB matrixleds[NUMMATRIX];
 
@@ -71,6 +59,7 @@ bool ignoreEncoder2Button = false;
 // --- Global Animation Management ---
 // Buffer for the converted RGB565 data (e.g. 16x16 pixels * 2 bytes/pixel)
 static uint16_t RGB_bmp_fixed[mw * mh];
+int animation_change_interval = 5; // Time in seconds to change to the next animation. Signed so minMax works correctly on decrements
 
 // Variables to track the current state of the animation
 uint8_t currentAnimationIndex = 0;
