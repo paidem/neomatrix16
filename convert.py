@@ -152,7 +152,7 @@ if __name__ == "__main__":
     if not os.path.exists(ANIMATIONS_DIR):
         print(f"Error: Directory '{ANIMATIONS_DIR}' not found. Please create it and put your JSON files inside.")
         sys.exit(1)
-        
+
     shutil.rmtree(INCLUDE_DIR, ignore_errors=True)    
     if not os.path.exists(INCLUDE_DIR):
         os.makedirs(INCLUDE_DIR)
