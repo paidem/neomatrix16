@@ -3,6 +3,8 @@
 #include <Adafruit_GFX.h>
 #include <Arduino.h>
 #include <FastLED.h>
+#include <WiFiManager.h>
+#include "time.h"
 #include <FastLED_NeoMatrix.h>
 
 // Turn on debug statements to the serial output
@@ -21,6 +23,10 @@
   #define PRINTS(x)
   #define PRINTX(x)
 #endif
+
+#define NTP_SERVER "pool.ntp.org"
+#define GMT_OFFSET 7200
+#define DAYLIGHT_OFFSET 3600
 
 
 #define DATAPIN 13
@@ -78,15 +84,34 @@ uint16_t messageColor = matrix->Color(0, 255, 0);
 unsigned long messageClearTime = 0;
 String message = "";
 
+// --- Wifi ---
+WiFiManager wm;
+
 // Function Prototypes
 void playCurrentFrame(const Animation *anim);
 void drawRGBBitmap(int16_t x, int16_t y, const uint8_t *bitmap, int16_t w, int16_t h);
 void showMessage(const String &msg, unsigned long duration_ms);
 int minMax(int val, int minVal, int maxVal);
 void turnOnDisplay();
+void checkTimeSync();
 
 void setup() {
   Serial.begin(115200);
+  delay(200);
+
+  // Wifi setup
+  WiFi.mode(WIFI_STA); // explicitly set mode, esp defaults to STA+AP   
+  // Uncomment to reset settings
+  // wm.resetSettings();
+  wm.setConfigPortalBlocking(false);
+  wm.setConfigPortalTimeout(10);
+  if(wm.autoConnect("WIFI-CONFIG-AP")){
+      Serial.println("wiFi connected");
+  }
+  else {
+      Serial.println("Config portal running");
+  }
+
   FastLED.addLeds<NEOPIXEL, DATAPIN>(matrixleds, NUMMATRIX);
   matrix->begin();
   matrix->setBrightness(MAX_BRIGHTNESS);
@@ -97,6 +122,9 @@ void setup() {
 }
 
 void loop() {
+  wm.process();
+  checkTimeSync();
+
   int shadeOfGray = map(messageClearTime - millis(), 0, 1000, 0, 255);
   matrix->setTextColor(matrix->Color(shadeOfGray, shadeOfGray, shadeOfGray));
   static unsigned long lastAnimationChangeTime = millis();
@@ -263,4 +291,29 @@ int minMax(int val, int minVal, int maxVal) {
   if (val > maxVal)
     return maxVal;
   return val;
+}
+
+void checkTimeSync() {
+  static bool timeSynced = false;
+
+  if (!timeSynced) {
+    if (WiFi.status() == WL_CONNECTED) {
+      // Init and get the time
+      configTime(GMT_OFFSET, DAYLIGHT_OFFSET, NTP_SERVER);
+      Serial.println("Getting local time");
+
+      struct tm timeinfo;
+      if(!getLocalTime(&timeinfo)){
+        Serial.println("Failed to obtain time");
+        return;
+      }
+      
+      timeSynced = true;
+      Serial.print("Local time: ");
+      Serial.println(&timeinfo, "%A, %B %d %Y %H:%M:%S");
+
+    }
+  }
+
+
 }
