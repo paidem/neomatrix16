@@ -5,6 +5,24 @@
 #include <FastLED.h>
 #include <FastLED_NeoMatrix.h>
 
+// Turn on debug statements to the serial output
+#define DEBUG 1
+
+#if DEBUG
+  #define PRINT(s, x)     \
+    {                     \
+      Serial.print(F(s)); \
+      Serial.print(x);    \
+    }
+  #define PRINTS(x) Serial.print(F(x))
+  #define PRINTX(x) Serial.println(x, HEX)
+#else
+  #define PRINT(s, x)
+  #define PRINTS(x)
+  #define PRINTX(x)
+#endif
+
+
 #define DATAPIN 13
 #define mw 16
 #define mh 16
