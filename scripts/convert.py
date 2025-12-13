@@ -146,20 +146,20 @@ def generate_master_header(animation_struct_names):
         
     print(f"\n✅ Generated master header: **{MASTER_HEADER}** with {len(animation_struct_names)} animations.")
 
-if __name__ == "__main__":
-    
-    # Setup directories
-    if not os.path.exists(ANIMATIONS_DIR):
-        print(f"Error: Directory '{ANIMATIONS_DIR}' not found. Please create it and put your JSON files inside.")
-        sys.exit(1)
 
-    shutil.rmtree(INCLUDE_DIR, ignore_errors=True)    
-    if not os.path.exists(INCLUDE_DIR):
-        os.makedirs(INCLUDE_DIR)
-        
-    # Create the animation_types.h file
-    with open(os.path.join(INCLUDE_DIR, "animation_types.h"), 'w') as f:
-        f.write("""#ifndef ANIMATION_TYPES_H
+
+# Setup directories
+if not os.path.exists(ANIMATIONS_DIR):
+    print(f"Error: Directory '{ANIMATIONS_DIR}' not found. Please create it and put your JSON files inside.")
+    sys.exit(1)
+
+shutil.rmtree(INCLUDE_DIR, ignore_errors=True)    
+if not os.path.exists(INCLUDE_DIR):
+    os.makedirs(INCLUDE_DIR)
+    
+# Create the animation_types.h file
+with open(os.path.join(INCLUDE_DIR, "animation_types.h"), 'w') as f:
+    f.write("""#ifndef ANIMATION_TYPES_H
 #define ANIMATION_TYPES_H
 #include <stdint.h>
 #include <Arduino.h>
@@ -175,22 +175,22 @@ typedef struct {
 #endif
 """)
     
-    print("Starting WLED animation conversion...")
-    
-    animation_struct_names = []
-    
-    for filename in os.listdir(ANIMATIONS_DIR):
-        if filename.endswith(".json"):
-            file_path = os.path.join(ANIMATIONS_DIR, filename)
-            base_name = os.path.splitext(filename)[0] # e.g., "gnome"
-            
-            # Assuming a fixed 16x16 matrix 
-            struct_name = generate_animation_header(file_path, base_name, 16, 16)
-            
-            if struct_name:
-                animation_struct_names.append(struct_name)
-    
-    if animation_struct_names:
-        generate_master_header(animation_struct_names)
-    else:
-        print("No valid JSON animations were processed.")
+print("Starting WLED animation conversion...")
+
+animation_struct_names = []
+
+for filename in os.listdir(ANIMATIONS_DIR):
+    if filename.endswith(".json"):
+        file_path = os.path.join(ANIMATIONS_DIR, filename)
+        base_name = os.path.splitext(filename)[0] # e.g., "gnome"
+        
+        # Assuming a fixed 16x16 matrix 
+        struct_name = generate_animation_header(file_path, base_name, 16, 16)
+        
+        if struct_name:
+            animation_struct_names.append(struct_name)
+
+if animation_struct_names:
+    generate_master_header(animation_struct_names)
+else:
+    print("No valid JSON animations were processed.")
