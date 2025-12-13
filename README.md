@@ -3,7 +3,11 @@
 
 # 💡 Animated LED Matrix
 
+
 This project implements a custom controller for a **16x16 addressable LED matrix** using an **ESP32** to display high-framerate animations.
+## Demo
+
+https://v.redd.it/2gezibfc8v6g1/CMAF_1080.mp4
 
 ## Inspiration
 
