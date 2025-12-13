@@ -88,9 +88,12 @@ The conversion process is as follows:
 
 1.  Load the desired animation into WLED.
 2.  Save the preset (**Config -\> Security & Updates -\> Backup & Restore -\> Backup presets**).
-3.  Rename the resulting JSON file and place it in the project's `animations` directory.
-4.  Run the converter: `python3 convert.py`.
-5.  Build and upload the project to the ESP32.
+3.  Rename the resulting JSON file and place it in the project's `animations_src` directory.
+4.  Animations will be converted to header files in `include/animations` folder (which is cleaned by conversion script) on every build
+
+If you want to try running conversion manually:
+1.  Run the converter: `python3 scripts/convert.py`.
+
 
 ## Flash Requirements and Partitions
 
