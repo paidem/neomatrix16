@@ -41,15 +41,19 @@ def generate_animation_header(file_path, base_name, width, height):
 
     frame_durations = [int(round(d)) for d in frame_durations_float]
 
-    # 2. Extract pixel data
+    # 2. Extract pixel data and convert to RGB565
+    def rgb888_to_rgb565(r, g, b):
+        return ((r & 0xF8) << 8) | ((g & 0xFC) << 3) | (b >> 3)
+
     for key in presets_to_use:
         try:
             frame_pixels = data[key]['seg']['i']
             if len(frame_pixels) != PIXEL_COUNT:
                 print(f"Warning: Preset {key} in {base_name} has {len(frame_pixels)} pixels, expected {PIXEL_COUNT}. Skipping frame.")
                 continue
-            
-            flat_pixels = [val for sublist in frame_pixels for val in sublist]
+
+            # Each pixel is [R, G, B]
+            flat_pixels = [f"0x{rgb888_to_rgb565(*sublist):04x}" for sublist in frame_pixels]
             frames_data.append(flat_pixels)
         except (KeyError, TypeError) as e:
             print(f"Warning: Skipping preset {key} in {base_name}: {e}")
@@ -63,7 +67,7 @@ def generate_animation_header(file_path, base_name, width, height):
 
     # 3. Generate the Header Content
     HEADER_GUARD = f"ANIMATION_{base_name.upper()}_H"
-    
+
     # Array names are unique using the base name
     frames_array_name = f"{base_name}Frames"
     durations_array_name = f"{base_name}Durations"
@@ -79,20 +83,20 @@ def generate_animation_header(file_path, base_name, width, height):
         f"// Frame Durations for {base_name} (in 100ms units)",
         f"static const uint8_t PROGMEM {durations_array_name}[] = {{ {', '.join(map(str, frame_durations[:num_frames]))} }};",
         "",
-        f"// RGB Frame Data for {base_name}",
-        f"static const uint8_t PROGMEM {frames_array_name}[] = {{",
+        f"// RGB565 Frame Data for {base_name}",
+        f"static const uint16_t PROGMEM {frames_array_name}[] = {{",
     ]
 
-    # Format pixel array content
+    # Format pixel array content (16-bit values)
     all_pixels = [str(val) for frame in frames_data for val in frame]
     pixel_lines = []
-    for i in range(0, len(all_pixels), 12):
-        pixel_lines.append("  " + ", ".join(all_pixels[i:i+12]))
+    for i in range(0, len(all_pixels), 8):
+        pixel_lines.append("  " + ", ".join(all_pixels[i:i+8]))
 
     header_content.append(",\n".join(pixel_lines))
     header_content.append("};")
     header_content.append("")
-    
+
     # Generate the Animation struct instance
     header_content.append(f"const Animation {struct_name} = {{")
     header_content.append(f"  .frameCount = {num_frames},")
@@ -101,10 +105,10 @@ def generate_animation_header(file_path, base_name, width, height):
     header_content.append(f"  .frameDurations = {durations_array_name},")
     header_content.append(f"  .animationFrames = {frames_array_name}")
     header_content.append("};")
-    
+
     header_content.append(f"#endif // {HEADER_GUARD}")
     header_content.append("")
-    
+
     # 4. Write the file
     output_path = os.path.join(INCLUDE_DIR, f"{base_name}.h")
     with open(output_path, 'w') as f:
@@ -169,7 +173,7 @@ typedef struct {
     const uint8_t width; 
     const uint8_t height; 
     const uint8_t *frameDurations; 
-    const uint8_t *animationFrames; 
+    const uint16_t *animationFrames; 
 } Animation;
 
 #endif

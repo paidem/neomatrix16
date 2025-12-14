@@ -81,7 +81,7 @@ WiFiManager wm;
 
 // Function Prototypes
 void playCurrentFrame(const Animation *anim);
-void drawRGBBitmap(int16_t x, int16_t y, const uint8_t *bitmap, int16_t w, int16_t h);
+void drawRGBBitmap(int16_t x, int16_t y, const uint16_t *bitmap, int16_t w, int16_t h);
 void showMessage(const String &msg, unsigned long duration_ms);
 int minMax(int val, int minVal, int maxVal);
 void turnOnDisplay();
@@ -217,9 +217,9 @@ void loop() {
 void playCurrentFrame(const Animation *anim) {
 
   // Calculate the start of the current frame data in PROGMEM
-  const uint32_t bytes_per_frame = (uint32_t)anim->width * anim->height * 3;
-  const uint32_t start_offset = currentFrame * bytes_per_frame;
-  const uint8_t *current_frame_addr = anim->animationFrames + start_offset;
+  const uint32_t words_per_frame = (uint32_t)anim->width * anim->height;
+  const uint32_t start_offset = currentFrame * words_per_frame;
+  const uint16_t *current_frame_addr = anim->animationFrames + start_offset;
 
   // Draw the bitmap for the current frame
   drawRGBBitmap(0, 0, current_frame_addr, anim->width, anim->height);
@@ -231,28 +231,13 @@ void playCurrentFrame(const Animation *anim) {
   matrix->show();
 }
 
-void drawRGBBitmap(int16_t x, int16_t y, const uint8_t *bitmap, int16_t w, int16_t h) {
-  uint32_t byteIndex = 0;
-
+void drawRGBBitmap(int16_t x, int16_t y, const uint16_t *bitmap, int16_t w, int16_t h) {
+  // Bitmap points to PROGMEM array of uint16_t RGB565 values
+  const uint16_t *bitmap16 = (const uint16_t *)bitmap;
   for (uint16_t pixel = 0; pixel < w * h; pixel++) {
-    uint8_t r, g, b;
-
-    // Read the next three bytes (R, G, B) from the PROGMEM address
-    r = pgm_read_byte(bitmap + byteIndex++);
-    g = pgm_read_byte(bitmap + byteIndex++);
-    b = pgm_read_byte(bitmap + byteIndex++);
-
-    // Color conversion (RGB888 to RGB565)
-    // Map(0-255) to 5-bit (0-31), 6-bit (0-63), 5-bit (0-31)
-    b = map(b, 0, 255, 0, 31);
-    g = map(g, 0, 255, 0, 63);
-    r = map(r, 0, 255, 0, 31);
-
-    // Combine into 16-bit RGB565 format (R:11-15, G:5-10, B:0-4)
-    RGB_bmp_fixed[pixel] = (r << 11) | (g << 5) | b;
+    // Read 16-bit value from PROGMEM
+    RGB_bmp_fixed[pixel] = pgm_read_word(bitmap16 + pixel);
   }
-
-  // The matrix library function reads from the RAM buffer (RGB_bmp_fixed)
   matrix->drawRGBBitmap(x, y, RGB_bmp_fixed, w, h);
 }
 
