@@ -97,13 +97,19 @@ If you want to try running conversion manually:
 
 ## Flash Requirements and Partitions
 
-A 16x16 matrix frame requires $16 \times 16 \times 3 \text{ bytes} = 768 \text{ bytes}$ of storage (representing 3 color channels). While the NeoMatrix library uses the more compact RGB565 format (16 bits per pixel), the current storage format is essentially a 24bit bitmap of every frame.
+Animations data is stored usin RGB565 format which uses 16bits for every pixel.
+A 16x16 matrix frame requires $16 \times 16 \times 2 \text{ bytes} = 512 \text{ bytes}$ of storage.
 
-The standard ESP32 4MB flash partition table reserves approximately 1.5MB for the application (app0) and 1.5MB for a second application (app1). This typically limits the storage to about **50 animations** (depending on frame count).
+The standard ESP32 4MB flash partition table reserves approximately 1.5MB for the application (app0) and 1.5MB for a second application (app1).
 
-I wanted to store around 65 animations, so I added a **custom partition table** which uses 3MB app0 parition.
+Currently APP without animations uses **~1.16 MB** of flash. This leaves **~300 KB** for animations (**~600** frames or about 30 animations). Full length of every animation is in the end of this file.
+Inluded 63 animation use **~960 KB** which translates to total **2.1 MB**
 
-### BOM
+That's why **custom partition table** is used whith 3 MB app0 parition.
+
+
+
+## BOM
 
 | Component | Price, €$ | Link |
 |---|---|---|
@@ -114,3 +120,69 @@ I wanted to store around 65 animations, so I added a **custom partition table** 
 |1000 uF capacitor|0.1||
 |330 Ohm resistor |0.05||
 -----
+## Animations Lengths
+| File | Frames |
+| :---  | :--- |
+| eye_scan | 24 |
+| cats_walking | 56 |
+| monochrom_smiley | 60 |
+| pirate_flag | 23 |
+| candle | 5 |
+| amongus | 6 |
+| dinos_colors | 48 |
+| penguin | 20 |
+| loading | 17 |
+| game_over | 57 |
+| figures_tetris | 37 |
+| lemur | 19 |
+| cat | 45 |
+| jumping_duck | 9 |
+| ps_symbols | 16 |
+| fireworks | 60 |
+| chip | 16 |
+| mtv | 4 |
+| tetris | 60 |
+| smiley | 30 |
+| coffee | 22 |
+| wow | 60 |
+| rainbow_chekered | 14 |
+| ducks_colors | 28 |
+| dino | 25 |
+| countdown | 60 |
+| nemo | 59 |
+| queen | 56 |
+| eyes_pop | 11 |
+| waves | 14 |
+| sonic | 24 |
+| golden_ring | 18 |
+| laughing_minion | 53 |
+| frog | 58 |
+| red_heart | 5 |
+| netflix | 32 |
+| flash | 12 |
+| rainbow_skull | 10 |
+| snake_eye | 52 |
+| gnome | 24 |
+| santa_eating_candy | 39 |
+| matrix | 8 |
+| halloween | 16 |
+| sponge_bob | 48 |
+| pokeball | 30 |
+| barbers | 12 |
+| plane_window | 15 |
+| hearts | 16 |
+| beer | 42 |
+| minion | 9 |
+| parrot | 3 |
+| shark | 31 |
+| smiley_with_a_tongue | 5 |
+| uss_enterprise | 48 |
+| abduction | 44 |
+| colorful_gates | 10 |
+| stop | 16 |
+| spiderman | 60 |
+| licking_lips | 45 |
+| jackson | 58 |
+| panda_eating_grass | 33 |
+| charlie_chaplin | 25 |
+| christmas_tree | 16 |
