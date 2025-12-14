@@ -8,7 +8,7 @@ typedef struct {
     const uint8_t width; 
     const uint8_t height; 
     const uint8_t *frameDurations; 
-    const uint8_t *animationFrames; 
+    const uint16_t *animationFrames; 
 } Animation;
 
 #endif
