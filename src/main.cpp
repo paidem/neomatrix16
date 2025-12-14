@@ -250,6 +250,11 @@ void turnOnDisplay() {
 }
 
 void IRAM_ATTR onEncoder1Button() {
+  if (displayClock) {
+    Serial.println("Doing nothing, clock display active");
+    return;
+  }
+  
   if (ignoreEncoder1Button) {
     ignoreEncoder1Button = false;
     return;
@@ -266,14 +271,14 @@ void encoder1LongPressCheck() {
   // Handle a case of encoder1 is just pressed
   if (encoder1.currentlyPressed && lastEncoderPressTime == 0) {
     lastEncoderPressTime = millis();
-    ignoreEncoder1Button = true;
   }
   if (encoder1.currentlyPressed == false && lastEncoderPressTime != 0) {
     lastEncoderPressTime = 0;
   }
-  if (lastEncoderPressTime != 0 && millis() - lastEncoderPressTime >= 1000) {
+  if (lastEncoderPressTime != 0 && millis() - lastEncoderPressTime >= 500) {
     displayClock = !displayClock;
     lastEncoderPressTime = 0;
+    ignoreEncoder1Button = true;
 
     Serial.println(displayClock ? "Clock display enabled" : "Animation display enabled");
   }
