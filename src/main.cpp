@@ -7,6 +7,7 @@
 #include "time.h"
 #include <FastLED_NeoMatrix.h>
 #include "settings.h"
+#include "Clocks.h"
 
 // Turn on debug statements to the serial output
 #define DEBUG 1
@@ -67,6 +68,8 @@ uint16_t currentFrame = 0;
 unsigned long lastFrameChangeTime = 0;
 unsigned long lastAnimationChangeTime = millis();
 int8_t brightness = MAX_BRIGHTNESS; // This is signed so minMax works correctly on decrements
+bool displayClock = false;
+uint8_t clockMode = 0; // 0 - Digital, 1 - Ring, 2 - Bars, 3 - Analog
 
 // Message display management
 uint16_t messageColor = matrix->Color(0, 255, 0);
@@ -83,6 +86,8 @@ void showMessage(const String &msg, unsigned long duration_ms);
 int minMax(int val, int minVal, int maxVal);
 void turnOnDisplay();
 void checkTimeSync();
+void encoder1LongPressCheck();
+void drawClock();
 
 void setup() {
   Serial.begin(115200);
@@ -114,6 +119,8 @@ void loop() {
   wm.process();
   checkTimeSync();
 
+  encoder1LongPressCheck();
+
   int shadeOfGray = map(messageClearTime - millis(), 0, 1000, 0, 255);
   matrix->setTextColor(matrix->Color(shadeOfGray, shadeOfGray, shadeOfGray));
   static unsigned long lastAnimationChangeTime = millis();
@@ -124,16 +131,21 @@ void loop() {
   uint8_t duration_units = pgm_read_byte(currentAnim->frameDurations + currentFrame);
   uint32_t delay_ms = (uint32_t)duration_units * 100.0f * (100.0f / (float)ANIMATION_SPEED);
 
-  // Check if animation is Enabled and advance frame if it's time to display the next frame
-  if (millis() - lastFrameChangeTime >= delay_ms) {
-    lastFrameChangeTime = millis();
-    playCurrentFrame(currentAnim);
+  if (displayClock) {
+    drawClock();
+  }
+  else {
+    // Check if animation is Enabled and advance frame if it's time to display the next frame
+    if (millis() - lastFrameChangeTime >= delay_ms) {
+      lastFrameChangeTime = millis();
+      playCurrentFrame(currentAnim);
 
-    // Increment frame counter, wrap around if necessary
-    if (animationEnabled) {
-      currentFrame++;
-      if (currentFrame >= currentAnim->frameCount) {
-        currentFrame = 0;
+      // Increment frame counter, wrap around if necessary
+      if (animationEnabled) {
+        currentFrame++;
+        if (currentFrame >= currentAnim->frameCount) {
+          currentFrame = 0;
+        }
       }
     }
   }
@@ -152,18 +164,25 @@ void loop() {
   // Encoder1 controls animation selection
   if (enc1_counter != 0) {
     turnOnDisplay();
-    currentAnimationIndex = (currentAnimationIndex + enc1_counter + TOTAL_ANIMATIONS) % TOTAL_ANIMATIONS;
-    currentFrame = 0; // Reset frame counter for new animation
-    enc1_counter = 0; // Reset encoder counter state
 
-    Serial.println("Switched to animation index: " + String(currentAnimationIndex + 1));
-
-    // Show animation index on the display but only if auto advance is disabled
-    // It gets annoying to have the index pop up every time in normal mode
-    if (!autoAdvanceEnabled) {
-      showMessage(String(currentAnimationIndex + 1), 1000);
+    if (displayClock) {
+      clockMode = clockMode + enc1_counter;
+      Serial.println("Clock mode changed to: " + String(clockMode));
     }
-    
+    else {
+      currentAnimationIndex = (currentAnimationIndex + enc1_counter + TOTAL_ANIMATIONS) % TOTAL_ANIMATIONS;
+      currentFrame = 0; // Reset frame counter for new animation
+
+      Serial.println("Switched to animation index: " + String(currentAnimationIndex + 1));
+
+      // Show animation index on the display but only if auto advance is disabled
+      // It gets annoying to have the index pop up every time in normal mode
+      if (!autoAdvanceEnabled) {
+        showMessage(String(currentAnimationIndex + 1), 1000);
+      }
+    }
+
+    enc1_counter = 0; // Reset encoder counter state
   }
 
   // Encoder 2 controls either brightness or animation change interval
@@ -257,6 +276,25 @@ void IRAM_ATTR onEncoder1Button() {
   turnOnDisplay();
 }
 
+void encoder1LongPressCheck() {
+  static unsigned long lastEncoderPressTime = 0;
+  // Handle a case of encoder1 is just pressed
+  if (encoder1.currentlyPressed && lastEncoderPressTime == 0) {
+    lastEncoderPressTime = millis();
+    ignoreEncoder1Button = true;
+  }
+  if (encoder1.currentlyPressed == false && lastEncoderPressTime != 0) {
+    lastEncoderPressTime = 0;
+  }
+  if (lastEncoderPressTime != 0 && millis() - lastEncoderPressTime >= 1000) {
+    displayClock = !displayClock;
+    lastEncoderPressTime = 0;
+
+    Serial.println(displayClock ? "Clock display enabled" : "Animation display enabled");
+  }
+
+}
+
 void IRAM_ATTR onEncoder2Button() {
   if (ignoreEncoder2Button) {
     ignoreEncoder2Button = false;
@@ -272,6 +310,31 @@ void IRAM_ATTR onEncoder2Button() {
 void showMessage(const String &msg, unsigned long duration_ms) {
   message = msg;
   messageClearTime = millis() + duration_ms;
+}
+
+void drawClock() {
+  switch (clockMode%4) {
+    case 0:
+      drawDigitalClock(matrix);
+      break;
+    case 1:
+      drawRingClock(matrix);
+      break;
+    case 2:
+      drawBarsClock(matrix);
+      break;
+    case 3:
+      drawAnalogClock(matrix);
+      break;
+    default:
+      break;
+  }
+
+  if (millis() < messageClearTime) {
+    matrix->setCursor(0, 0);
+    matrix->print(message);
+  }
+  matrix->show();
 }
 
 int minMax(int val, int minVal, int maxVal) {

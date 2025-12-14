@@ -35,10 +35,10 @@ The playlist feature in WLED imposes a **minimal preset duration of 0.2 seconds*
 
 The system is controlled using two rotary encoders, each with an integrated push button:
 
-| Encoder | Rotation Action | Button Press Action | Pressed + Rotation Action |
-| :--- | :--- | :--- | :--- |
-| **Encoder 1 (Left)** | Switch the current animation | Toggle automatic animation switching on/off | N/A |
-| **Encoder 2 (Right)** | Change the auto-switch frequency (1–60 seconds) | Pause the animation at the current frame | Adjust overall brightness |
+| Encoder | Rotation | Press  | Long Press | Pressed + Rotation Action |
+| :--- | :--- | :--- | :--- | :--- |
+| **Encoder 1 (Left)** | Switch the current animation or clock | Toggle automatic animation switching on/off | Switch betweeen animation and clock modes | N/A |
+| **Encoder 2 (Right)** | Change the auto-switch frequency (1–60 seconds) | Pause the animation at the current frame | N/A | Adjust overall brightness |
 
 ## Circuit
 
