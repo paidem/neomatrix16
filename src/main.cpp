@@ -98,7 +98,7 @@ void setup() {
   // Uncomment to reset settings
   // wm.resetSettings();
   wm.setConfigPortalBlocking(false);
-  wm.setConfigPortalTimeout(10);
+  wm.setConfigPortalTimeout(60);
   if(wm.autoConnect("WIFI-CONFIG-AP")){
       Serial.println("wiFi connected");
   }
