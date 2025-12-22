@@ -60,7 +60,7 @@ bool ignoreEncoder2Button = false;
 // --- Global Animation Management ---
 // Buffer for the converted RGB565 data (e.g. 16x16 pixels * 2 bytes/pixel)
 static uint16_t RGB_bmp_fixed[mw * mh];
-int animation_change_interval = 5; // Time in seconds to change to the next animation. Signed so minMax works correctly on decrements
+int animation_change_interval = INITIAL_ANIMATION_INTERVAL; // Time in seconds to change to the next animation. Signed so minMax works correctly on decrements
 
 // Variables to track the current state of the animation
 uint8_t currentAnimationIndex = 0;

@@ -13,5 +13,5 @@
 #define ANIMATION_SPEED 150   // Speed in percent compared to original animation speed
 
 #define NUMMATRIX (mw * mh)
-
+#define INITIAL_ANIMATION_INTERVAL 10 // Initial interval for animations in seconds
 #endif // SETTINGS_H
