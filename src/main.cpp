@@ -91,21 +91,26 @@ void drawClock();
 
 void setup() {
   Serial.begin(115200);
-  delay(200);
+  delay(1000);
 
   // Wifi setup
   WiFi.mode(WIFI_STA); // explicitly set mode, esp defaults to STA+AP   
   // Uncomment to reset settings
   // wm.resetSettings();
   wm.setConfigPortalBlocking(false);
+
+  Serial.println("Setting portal config timout to 60 seconds and connect timeout to 30 seconds");
   wm.setConfigPortalTimeout(60);
+  wm.setConnectTimeout(30);
+
+  Serial.println("Connecting to WiFi...");
   if(wm.autoConnect("WIFI-CONFIG-AP")){
       Serial.println("wiFi connected");
   }
   else {
       Serial.println("Config portal running");
   }
-
+  Serial.println("Continuing setup...");
   FastLED.addLeds<NEOPIXEL, DATAPIN>(matrixleds, NUMMATRIX);
   matrix->begin();
   matrix->setBrightness(MAX_BRIGHTNESS);
