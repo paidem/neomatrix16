@@ -178,8 +178,32 @@ typedef struct {
 
 #endif
 """)
+
+
+# Access PlatformIO environment variables
+# Import the Project Environment if running within PIO
+try:
+    Import("env")
+    # 1. Get the configuration object
+    config = env.GetProjectConfig()
+    # 2. Get the value from the current environment section
+    # If the key is missing, it returns None or an empty string
+    filter_val = config.get(f"env:{env['PIOENV']}", "custom_animation_filter", default="")
+    
+    # 3. Clean and split into a list
+    animation_filter = filter_val.split() if filter_val else []
+except Exception:
+    # Fallback if running outside of PlatformIO context
+    animation_filter = []
+
+if animation_filter:
+    print(f"-> Filter active: processing only {animation_filter}")
+else:
+    print("-> No filter defined: processing all files in animations_src")
     
 print("Starting WLED animation conversion...")
+if animation_filter:
+    print(f"Filtering for: {animation_filter}")
 
 animation_struct_names = []
 
@@ -188,6 +212,10 @@ for filename in os.listdir(ANIMATIONS_DIR):
         file_path = os.path.join(ANIMATIONS_DIR, filename)
         base_name = os.path.splitext(filename)[0] # e.g., "gnome"
         
+        # Check if filter is active and if file is in the filter
+        if animation_filter and base_name not in animation_filter:
+            continue
+
         # Assuming a fixed 16x16 matrix 
         struct_name = generate_animation_header(file_path, base_name, 16, 16)
         
