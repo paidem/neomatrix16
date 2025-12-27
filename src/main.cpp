@@ -192,6 +192,9 @@ void loop() {
     }
     else {
       currentAnimationIndex = (currentAnimationIndex + enc1_counter + TOTAL_ANIMATIONS) % TOTAL_ANIMATIONS;
+
+      lastAnimationChangeTime = millis(); // Reset animation change timer on manual change
+      
       currentFrame = 0; // Reset frame counter for new animation
 
       Serial.println("Switched to animation index: " + String(currentAnimationIndex + 1));
