@@ -1932,6 +1932,7 @@ static const uint16_t PROGMEM monochrom_smileyFrames[] = {
 };
 
 const Animation monochrom_smileyAnimation = {
+  .name = "Monochrom Smiley",
   .frameCount = 60,
   .width = 16,
   .height = 16,

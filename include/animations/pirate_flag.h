@@ -748,6 +748,7 @@ static const uint16_t PROGMEM pirate_flagFrames[] = {
 };
 
 const Animation pirate_flagAnimation = {
+  .name = "Pirate Flag",
   .frameCount = 23,
   .width = 16,
   .height = 16,

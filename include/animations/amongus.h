@@ -204,6 +204,7 @@ static const uint16_t PROGMEM amongusFrames[] = {
 };
 
 const Animation amongusAnimation = {
+  .name = "Amongus",
   .frameCount = 6,
   .width = 16,
   .height = 16,

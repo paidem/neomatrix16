@@ -396,6 +396,7 @@ static const uint16_t PROGMEM flashFrames[] = {
 };
 
 const Animation flashAnimation = {
+  .name = "Flash",
   .frameCount = 12,
   .width = 16,
   .height = 16,

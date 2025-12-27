@@ -1004,6 +1004,7 @@ static const uint16_t PROGMEM sharkFrames[] = {
 };
 
 const Animation sharkAnimation = {
+  .name = "Shark",
   .frameCount = 31,
   .width = 16,
   .height = 16,

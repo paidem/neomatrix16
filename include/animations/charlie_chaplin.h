@@ -812,6 +812,7 @@ static const uint16_t PROGMEM charlie_chaplinFrames[] = {
 };
 
 const Animation charlie_chaplinAnimation = {
+  .name = "Charlie Chaplin",
   .frameCount = 25,
   .width = 16,
   .height = 16,

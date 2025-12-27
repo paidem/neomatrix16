@@ -1548,6 +1548,7 @@ static const uint16_t PROGMEM uss_enterpriseFrames[] = {
 };
 
 const Animation uss_enterpriseAnimation = {
+  .name = "Uss Enterprise",
   .frameCount = 48,
   .width = 16,
   .height = 16,

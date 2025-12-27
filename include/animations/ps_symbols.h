@@ -524,6 +524,7 @@ static const uint16_t PROGMEM ps_symbolsFrames[] = {
 };
 
 const Animation ps_symbolsAnimation = {
+  .name = "Ps Symbols",
   .frameCount = 16,
   .width = 16,
   .height = 16,

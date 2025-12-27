@@ -1548,6 +1548,7 @@ static const uint16_t PROGMEM sponge_bobFrames[] = {
 };
 
 const Animation sponge_bobAnimation = {
+  .name = "Sponge Bob",
   .frameCount = 48,
   .width = 16,
   .height = 16,

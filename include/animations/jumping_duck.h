@@ -300,6 +300,7 @@ static const uint16_t PROGMEM jumping_duckFrames[] = {
 };
 
 const Animation jumping_duckAnimation = {
+  .name = "Jumping Duck",
   .frameCount = 9,
   .width = 16,
   .height = 16,

@@ -780,6 +780,7 @@ static const uint16_t PROGMEM sonicFrames[] = {
 };
 
 const Animation sonicAnimation = {
+  .name = "Sonic",
   .frameCount = 24,
   .width = 16,
   .height = 16,

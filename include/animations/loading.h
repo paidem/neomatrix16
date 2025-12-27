@@ -556,6 +556,7 @@ static const uint16_t PROGMEM loadingFrames[] = {
 };
 
 const Animation loadingAnimation = {
+  .name = "Loading",
   .frameCount = 17,
   .width = 16,
   .height = 16,

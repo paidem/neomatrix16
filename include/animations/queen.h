@@ -1804,6 +1804,7 @@ static const uint16_t PROGMEM queenFrames[] = {
 };
 
 const Animation queenAnimation = {
+  .name = "Queen",
   .frameCount = 56,
   .width = 16,
   .height = 16,

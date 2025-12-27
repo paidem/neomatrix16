@@ -972,6 +972,7 @@ static const uint16_t PROGMEM pokeballFrames[] = {
 };
 
 const Animation pokeballAnimation = {
+  .name = "Pokeball",
   .frameCount = 30,
   .width = 16,
   .height = 16,

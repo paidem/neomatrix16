@@ -1260,6 +1260,7 @@ static const uint16_t PROGMEM santa_eating_candyFrames[] = {
 };
 
 const Animation santa_eating_candyAnimation = {
+  .name = "Santa Eating Candy",
   .frameCount = 39,
   .width = 16,
   .height = 16,

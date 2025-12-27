@@ -524,6 +524,7 @@ static const uint16_t PROGMEM chipFrames[] = {
 };
 
 const Animation chipAnimation = {
+  .name = "Chip",
   .frameCount = 16,
   .width = 16,
   .height = 16,

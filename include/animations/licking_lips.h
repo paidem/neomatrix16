@@ -1452,6 +1452,7 @@ static const uint16_t PROGMEM licking_lipsFrames[] = {
 };
 
 const Animation licking_lipsAnimation = {
+  .name = "Licking Lips",
   .frameCount = 45,
   .width = 16,
   .height = 16,

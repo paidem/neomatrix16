@@ -364,6 +364,7 @@ static const uint16_t PROGMEM eyes_popFrames[] = {
 };
 
 const Animation eyes_popAnimation = {
+  .name = "Eyes Pop",
   .frameCount = 11,
   .width = 16,
   .height = 16,

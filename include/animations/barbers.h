@@ -396,6 +396,7 @@ static const uint16_t PROGMEM barbersFrames[] = {
 };
 
 const Animation barbersAnimation = {
+  .name = "Barbers",
   .frameCount = 12,
   .width = 16,
   .height = 16,

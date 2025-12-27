@@ -1708,6 +1708,7 @@ static const uint16_t PROGMEM laughing_minionFrames[] = {
 };
 
 const Animation laughing_minionAnimation = {
+  .name = "Laughing Minion",
   .frameCount = 53,
   .width = 16,
   .height = 16,

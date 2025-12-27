@@ -1932,6 +1932,7 @@ static const uint16_t PROGMEM countdownFrames[] = {
 };
 
 const Animation countdownAnimation = {
+  .name = "Countdown",
   .frameCount = 60,
   .width = 16,
   .height = 16,

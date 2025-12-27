@@ -620,6 +620,7 @@ static const uint16_t PROGMEM lemurFrames[] = {
 };
 
 const Animation lemurAnimation = {
+  .name = "Lemur",
   .frameCount = 19,
   .width = 16,
   .height = 16,

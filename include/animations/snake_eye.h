@@ -1676,6 +1676,7 @@ static const uint16_t PROGMEM snake_eyeFrames[] = {
 };
 
 const Animation snake_eyeAnimation = {
+  .name = "Snake Eye",
   .frameCount = 52,
   .width = 16,
   .height = 16,

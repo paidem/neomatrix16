@@ -908,6 +908,7 @@ static const uint16_t PROGMEM ducks_colorsFrames[] = {
 };
 
 const Animation ducks_colorsAnimation = {
+  .name = "Ducks Colors",
   .frameCount = 28,
   .width = 16,
   .height = 16,

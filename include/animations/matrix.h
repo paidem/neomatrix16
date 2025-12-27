@@ -268,6 +268,7 @@ static const uint16_t PROGMEM matrixFrames[] = {
 };
 
 const Animation matrixAnimation = {
+  .name = "Matrix",
   .frameCount = 8,
   .width = 16,
   .height = 16,

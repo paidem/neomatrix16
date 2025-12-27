@@ -1804,6 +1804,7 @@ static const uint16_t PROGMEM cats_walkingFrames[] = {
 };
 
 const Animation cats_walkingAnimation = {
+  .name = "Cats Walking",
   .frameCount = 56,
   .width = 16,
   .height = 16,

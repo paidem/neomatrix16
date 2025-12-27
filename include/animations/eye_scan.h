@@ -780,6 +780,7 @@ static const uint16_t PROGMEM eye_scanFrames[] = {
 };
 
 const Animation eye_scanAnimation = {
+  .name = "Eye Scan",
   .frameCount = 24,
   .width = 16,
   .height = 16,

@@ -1868,6 +1868,7 @@ static const uint16_t PROGMEM frogFrames[] = {
 };
 
 const Animation frogAnimation = {
+  .name = "Frog",
   .frameCount = 58,
   .width = 16,
   .height = 16,

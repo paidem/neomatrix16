@@ -172,6 +172,7 @@ static const uint16_t PROGMEM smiley_with_a_tongueFrames[] = {
 };
 
 const Animation smiley_with_a_tongueAnimation = {
+  .name = "Smiley With A Tongue",
   .frameCount = 5,
   .width = 16,
   .height = 16,

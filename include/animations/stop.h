@@ -524,6 +524,7 @@ static const uint16_t PROGMEM stopFrames[] = {
 };
 
 const Animation stopAnimation = {
+  .name = "Stop",
   .frameCount = 16,
   .width = 16,
   .height = 16,

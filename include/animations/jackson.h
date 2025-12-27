@@ -1868,6 +1868,7 @@ static const uint16_t PROGMEM jacksonFrames[] = {
 };
 
 const Animation jacksonAnimation = {
+  .name = "Jackson",
   .frameCount = 58,
   .width = 16,
   .height = 16,

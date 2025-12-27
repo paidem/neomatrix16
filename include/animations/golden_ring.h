@@ -588,6 +588,7 @@ static const uint16_t PROGMEM golden_ringFrames[] = {
 };
 
 const Animation golden_ringAnimation = {
+  .name = "Golden Ring",
   .frameCount = 18,
   .width = 16,
   .height = 16,

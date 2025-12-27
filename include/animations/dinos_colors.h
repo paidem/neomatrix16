@@ -1548,6 +1548,7 @@ static const uint16_t PROGMEM dinos_colorsFrames[] = {
 };
 
 const Animation dinos_colorsAnimation = {
+  .name = "Dinos Colors",
   .frameCount = 48,
   .width = 16,
   .height = 16,

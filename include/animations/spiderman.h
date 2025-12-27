@@ -1932,6 +1932,7 @@ static const uint16_t PROGMEM spidermanFrames[] = {
 };
 
 const Animation spidermanAnimation = {
+  .name = "Spiderman",
   .frameCount = 60,
   .width = 16,
   .height = 16,

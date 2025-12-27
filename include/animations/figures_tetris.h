@@ -1196,6 +1196,7 @@ static const uint16_t PROGMEM figures_tetrisFrames[] = {
 };
 
 const Animation figures_tetrisAnimation = {
+  .name = "Figures Tetris",
   .frameCount = 37,
   .width = 16,
   .height = 16,

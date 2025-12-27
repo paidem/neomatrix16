@@ -1036,6 +1036,7 @@ static const uint16_t PROGMEM netflixFrames[] = {
 };
 
 const Animation netflixAnimation = {
+  .name = "Netflix",
   .frameCount = 32,
   .width = 16,
   .height = 16,

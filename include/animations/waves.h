@@ -460,6 +460,7 @@ static const uint16_t PROGMEM wavesFrames[] = {
 };
 
 const Animation wavesAnimation = {
+  .name = "Waves",
   .frameCount = 14,
   .width = 16,
   .height = 16,

@@ -780,6 +780,7 @@ static const uint16_t PROGMEM gnomeFrames[] = {
 };
 
 const Animation gnomeAnimation = {
+  .name = "Gnome",
   .frameCount = 24,
   .width = 16,
   .height = 16,

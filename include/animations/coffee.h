@@ -716,6 +716,7 @@ static const uint16_t PROGMEM coffeeFrames[] = {
 };
 
 const Animation coffeeAnimation = {
+  .name = "Coffee",
   .frameCount = 22,
   .width = 16,
   .height = 16,

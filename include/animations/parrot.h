@@ -108,6 +108,7 @@ static const uint16_t PROGMEM parrotFrames[] = {
 };
 
 const Animation parrotAnimation = {
+  .name = "Parrot",
   .frameCount = 3,
   .width = 16,
   .height = 16,

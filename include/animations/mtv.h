@@ -140,6 +140,7 @@ static const uint16_t PROGMEM mtvFrames[] = {
 };
 
 const Animation mtvAnimation = {
+  .name = "Mtv",
   .frameCount = 4,
   .width = 16,
   .height = 16,

@@ -172,6 +172,7 @@ static const uint16_t PROGMEM candleFrames[] = {
 };
 
 const Animation candleAnimation = {
+  .name = "Candle",
   .frameCount = 5,
   .width = 16,
   .height = 16,

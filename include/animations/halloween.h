@@ -524,6 +524,7 @@ static const uint16_t PROGMEM halloweenFrames[] = {
 };
 
 const Animation halloweenAnimation = {
+  .name = "Halloween",
   .frameCount = 16,
   .width = 16,
   .height = 16,

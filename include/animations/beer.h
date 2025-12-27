@@ -1356,6 +1356,7 @@ static const uint16_t PROGMEM beerFrames[] = {
 };
 
 const Animation beerAnimation = {
+  .name = "Beer",
   .frameCount = 42,
   .width = 16,
   .height = 16,

@@ -1932,6 +1932,7 @@ static const uint16_t PROGMEM fireworksFrames[] = {
 };
 
 const Animation fireworksAnimation = {
+  .name = "Fireworks",
   .frameCount = 60,
   .width = 16,
   .height = 16,

@@ -524,6 +524,7 @@ static const uint16_t PROGMEM heartsFrames[] = {
 };
 
 const Animation heartsAnimation = {
+  .name = "Hearts",
   .frameCount = 16,
   .width = 16,
   .height = 16,

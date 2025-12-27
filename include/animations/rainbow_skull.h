@@ -332,6 +332,7 @@ static const uint16_t PROGMEM rainbow_skullFrames[] = {
 };
 
 const Animation rainbow_skullAnimation = {
+  .name = "Rainbow Skull",
   .frameCount = 10,
   .width = 16,
   .height = 16,

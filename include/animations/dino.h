@@ -812,6 +812,7 @@ static const uint16_t PROGMEM dinoFrames[] = {
 };
 
 const Animation dinoAnimation = {
+  .name = "Dino",
   .frameCount = 25,
   .width = 16,
   .height = 16,

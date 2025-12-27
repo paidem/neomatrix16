@@ -652,6 +652,7 @@ static const uint16_t PROGMEM penguinFrames[] = {
 };
 
 const Animation penguinAnimation = {
+  .name = "Penguin",
   .frameCount = 20,
   .width = 16,
   .height = 16,

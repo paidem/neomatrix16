@@ -524,6 +524,7 @@ static const uint16_t PROGMEM christmas_treeFrames[] = {
 };
 
 const Animation christmas_treeAnimation = {
+  .name = "Christmas Tree",
   .frameCount = 16,
   .width = 16,
   .height = 16,

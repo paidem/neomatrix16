@@ -492,6 +492,7 @@ static const uint16_t PROGMEM plane_windowFrames[] = {
 };
 
 const Animation plane_windowAnimation = {
+  .name = "Plane Window",
   .frameCount = 15,
   .width = 16,
   .height = 16,

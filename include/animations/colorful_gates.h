@@ -332,6 +332,7 @@ static const uint16_t PROGMEM colorful_gatesFrames[] = {
 };
 
 const Animation colorful_gatesAnimation = {
+  .name = "Colorful Gates",
   .frameCount = 10,
   .width = 16,
   .height = 16,

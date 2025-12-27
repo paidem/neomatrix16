@@ -972,6 +972,7 @@ static const uint16_t PROGMEM smileyFrames[] = {
 };
 
 const Animation smileyAnimation = {
+  .name = "Smiley",
   .frameCount = 30,
   .width = 16,
   .height = 16,

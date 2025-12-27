@@ -1836,6 +1836,7 @@ static const uint16_t PROGMEM game_overFrames[] = {
 };
 
 const Animation game_overAnimation = {
+  .name = "Game Over",
   .frameCount = 57,
   .width = 16,
   .height = 16,

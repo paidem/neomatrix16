@@ -460,6 +460,7 @@ static const uint16_t PROGMEM rainbow_chekeredFrames[] = {
 };
 
 const Animation rainbow_chekeredAnimation = {
+  .name = "Rainbow Chekered",
   .frameCount = 14,
   .width = 16,
   .height = 16,

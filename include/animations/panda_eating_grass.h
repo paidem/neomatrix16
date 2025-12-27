@@ -1068,6 +1068,7 @@ static const uint16_t PROGMEM panda_eating_grassFrames[] = {
 };
 
 const Animation panda_eating_grassAnimation = {
+  .name = "Panda Eating Grass",
   .frameCount = 33,
   .width = 16,
   .height = 16,
