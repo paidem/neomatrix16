@@ -4,8 +4,9 @@
 Encoder* Encoder::_instances[6] = {nullptr};
 uint8_t Encoder::_numInstances = 0;
 
-Encoder::Encoder(uint8_t pinA, uint8_t pinB, uint8_t pinBtn, volatile int* valuePtr, ButtonCallback btnCallback)
-    : _pinA(pinA), _pinB(pinB), _pinBtn(pinBtn), _valuePtr(valuePtr), _btnCallback(btnCallback), _lastBtnTime(0) {
+Encoder::Encoder(uint8_t pinA, uint8_t pinB, uint8_t pinBtn, volatile int* valuePtr, ButtonCallback btnCallback, ButtonCallback btnLongCallback, unsigned long longPressDuration)
+    : _pinA(pinA), _pinB(pinB), _pinBtn(pinBtn), _valuePtr(valuePtr), _btnCallback(btnCallback), _btnLongCallback(btnLongCallback), _longPressDuration(longPressDuration),
+    _lastBtnTime(0) {
     _lastStateA = LOW;
     _lastStateB = LOW;
     _lastBtnState = HIGH;
@@ -25,6 +26,18 @@ void Encoder::begin() {
     _old_AB = 3; // initial state for lookup
     _encval = 0;
     currentlyPressed = false;
+
+    // Create FreeRTOS timer for long press detection
+    if (_longPressTimer == nullptr) {
+        _longPressTimer = xTimerCreate(
+            "LongPressTimer",
+            pdMS_TO_TICKS(_longPressDuration),
+            pdFALSE, // one-shot
+            this,
+            Encoder::longPressTimerCallback
+        );
+    }
+    _longPressFired = false;
 
     // Attach interrupts using lambdas and static_cast to call instance methods.
     // This allows each Encoder object to handle its own pins without global/static ISRs.
@@ -50,9 +63,11 @@ void Encoder::handleEncoderISR() {
     // Only update value on full detent (4 steps)
     if (_encval > 3) {
         _encval = 0;
+        totalClicks++;
         (*_valuePtr)++;
     } else if (_encval < -3) {
         _encval = 0;
+        totalClicks++;
         (*_valuePtr)--;
     }
 }
@@ -62,10 +77,34 @@ void Encoder::handleBtn() {
     unsigned long now = millis();
     if (reading != _lastBtnState && (now - _lastBtnTime) > _debounceDelay) {
         currentlyPressed = (reading == LOW);
-        if (_lastBtnState == LOW && reading == HIGH) {
-            if (_btnCallback) _btnCallback();
+        if (reading == LOW) {
+            // Button pressed: start long press timer
+            _longPressFired = false;
+            if (_longPressTimer) {
+                _longPressStartClicks = totalClicks; // Value to detect clicks during long press
+                xTimerStop(_longPressTimer, 0);
+                xTimerChangePeriod(_longPressTimer, pdMS_TO_TICKS(_longPressDuration), 0);
+                xTimerStart(_longPressTimer, 0);
+            }
+        } else if (_lastBtnState == LOW && reading == HIGH) {
+            // Button released
+            if (_longPressTimer) xTimerStop(_longPressTimer, 0);
+            if (!_longPressFired && _longPressStartClicks == totalClicks) {
+                // Short press detected (long press not fired)
+                if (_btnCallback) _btnCallback();
+            }
         }
         _lastBtnTime = now;
     }
     _lastBtnState = reading;
+}
+
+// FreeRTOS timer callback for long press
+void Encoder::longPressTimerCallback(TimerHandle_t xTimer) {
+    Encoder* enc = static_cast<Encoder*>(pvTimerGetTimerID(xTimer));
+    if (enc && digitalRead(enc->_pinBtn) == LOW && enc->_longPressStartClicks == enc->totalClicks) {
+        // Button still pressed after timeout and no clicks detected during this period
+        enc->_longPressFired = true;
+        if (enc->_btnLongCallback) enc->_btnLongCallback();
+    }
 }

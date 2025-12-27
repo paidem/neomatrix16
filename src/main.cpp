@@ -51,11 +51,13 @@ volatile bool autoAdvanceEnabled = true;
 volatile bool animationEnabled = true;
 
 // Forward declarations of ISR callback functions
-void onEncoder1Button();
-void onEncoder2Button();
+void onEncoder1_shortPress();
+void onEncoder2_shortPress();
+void onEncoder1_longPress();
+void onEncoder2_longPress();
 
-Encoder encoder1(ENC1_A, ENC1_B, ENC1_BUTTON, &enc1_counter, onEncoder1Button);
-Encoder encoder2(ENC2_A, ENC2_B, ENC2_BUTTON, &enc2_counter, onEncoder2Button);
+Encoder encoder1(ENC1_A, ENC1_B, ENC1_BUTTON, &enc1_counter, onEncoder1_shortPress, onEncoder1_longPress, 1500);
+Encoder encoder2(ENC2_A, ENC2_B, ENC2_BUTTON, &enc2_counter, onEncoder2_shortPress, onEncoder2_longPress, 1500);
 
 bool ignoreEncoder1Button = false;
 bool ignoreEncoder2Button = false;
@@ -93,7 +95,6 @@ void showMessage(const String &msg, unsigned long duration_ms);
 int minMax(int val, int minVal, int maxVal);
 void turnOnDisplay();
 void checkTimeSync();
-void encoder1LongPressCheck();
 void drawClock();
 
 void setup() {
@@ -140,8 +141,6 @@ void loop() {
   checkTimeSync();
   matrix->setBrightness(brightness);
 
-  encoder1LongPressCheck();
-
   int shadeOfGray = map(messageClearTime - millis(), 0, 1000, 0, 255);
   matrix->setTextColor(matrix->Color(shadeOfGray, shadeOfGray, shadeOfGray));
   static unsigned long lastAnimationChangeTime = millis();
@@ -183,7 +182,7 @@ void loop() {
     }
   }
 
-  // Encoder1 controls animation selection
+  // Encoder1 controls animation selection or clock mode
   if (enc1_counter != 0) {
     turnOnDisplay();
 
@@ -209,19 +208,16 @@ void loop() {
 
   // Encoder 2 controls either brightness or animation change interval
   if (enc2_counter != 0) {
-
+    // If the encoder button is pressed, adjust brightness
     if (encoder2.currentlyPressed) {
-      // If the button is currently pressed, raise a flag to ignore the next button press event
-      ignoreEncoder2Button = true;
-
-      // brightness += (enc2_counter/abs(enc2_counter)) * 5;
       brightness += enc2_counter * 5;
       brightness = minMax(brightness, 0, MAX_BRIGHTNESS);
       
       Serial.println("Brightness set to: " + String(brightness) + "%");
       showMessage(String(brightness) + "%", 1000);
-
-    } else {
+    } 
+    // If the encoder button is not pressed, adjust animation change interval
+    else {
       // If we are in situation where brightness is zero, and user turned the encoder - restore it
       turnOnDisplay();
 
@@ -271,16 +267,12 @@ void turnOnDisplay() {
   }
 }
 
-void IRAM_ATTR onEncoder1Button() {
+void IRAM_ATTR onEncoder1_shortPress() {
   if (displayClock) {
     Serial.println("Doing nothing, clock display active");
     return;
   }
   
-  if (ignoreEncoder1Button) {
-    ignoreEncoder1Button = false;
-    return;
-  }
   autoAdvanceEnabled = !autoAdvanceEnabled;
   showMessage(autoAdvanceEnabled ? ">>" : String(currentAnimationIndex), 1000);
 
@@ -288,26 +280,13 @@ void IRAM_ATTR onEncoder1Button() {
   turnOnDisplay();
 }
 
-void encoder1LongPressCheck() {
-  static unsigned long lastEncoderPressTime = 0;
-  // Handle a case of encoder1 is just pressed
-  if (encoder1.currentlyPressed && lastEncoderPressTime == 0) {
-    lastEncoderPressTime = millis();
-  }
-  if (encoder1.currentlyPressed == false && lastEncoderPressTime != 0) {
-    lastEncoderPressTime = 0;
-  }
-  if (lastEncoderPressTime != 0 && millis() - lastEncoderPressTime >= 500) {
-    displayClock = !displayClock;
-    lastEncoderPressTime = 0;
-    ignoreEncoder1Button = true;
 
-    Serial.println(displayClock ? "Clock display enabled" : "Animation display enabled");
-  }
-
+void IRAM_ATTR onEncoder1_longPress() {
+  displayClock = !displayClock;
+  Serial.println(displayClock ? "Clock display enabled" : "Animation display enabled");
 }
 
-void IRAM_ATTR onEncoder2Button() {
+void IRAM_ATTR onEncoder2_shortPress() {
   if (ignoreEncoder2Button) {
     ignoreEncoder2Button = false;
     return;
@@ -317,6 +296,12 @@ void IRAM_ATTR onEncoder2Button() {
 
   // If we are in situation where brightness is zero, and user pressed a button - restore it
   turnOnDisplay();
+}
+
+void IRAM_ATTR onEncoder2_longPress() {
+  brightness = 0;
+  matrix->setBrightness(brightness);
+  Serial.println("Display turned off");
 }
 
 void showMessage(const String &msg, unsigned long duration_ms) {
