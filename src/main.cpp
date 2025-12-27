@@ -221,11 +221,13 @@ void loop() {
       // If we are in situation where brightness is zero, and user turned the encoder - restore it
       turnOnDisplay();
 
-      animation_change_interval += enc2_counter; // Change interval by 1 second per step
-      animation_change_interval = minMax(animation_change_interval, 1, 60);
-
-      Serial.println("Animation change interval: " + String(animation_change_interval) + " s");
-      showMessage(String(animation_change_interval) + "s", 1000);
+      if (!displayClock) {
+        animation_change_interval += enc2_counter; // Change interval by 1 second per step
+        animation_change_interval = minMax(animation_change_interval, 1, 60);
+        
+        Serial.println("Animation change interval: " + String(animation_change_interval) + " s");
+        showMessage(String(animation_change_interval) + "s", 1000);
+      }
     }
     enc2_counter = 0;
   }
