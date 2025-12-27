@@ -1,3 +1,5 @@
+#include <stddef.h>
+
 #include "Encoder.h"
 #include "animations/animations.h"
 #include <Adafruit_GFX.h>
@@ -8,6 +10,7 @@
 #include <FastLED_NeoMatrix.h>
 #include "settings.h"
 #include "Clocks.h"
+#include "Web.h"
 
 // Turn on debug statements to the serial output
 #define DEBUG 1
@@ -62,6 +65,10 @@ bool ignoreEncoder2Button = false;
 static uint16_t RGB_bmp_fixed[mw * mh];
 int animation_change_interval = INITIAL_ANIMATION_INTERVAL; // Time in seconds to change to the next animation. Signed so minMax works correctly on decrements
 
+
+AnimationInfo animationInfoArray[TOTAL_ANIMATIONS];
+
+
 // Variables to track the current state of the animation
 uint8_t currentAnimationIndex = 0;
 uint16_t currentFrame = 0;
@@ -90,6 +97,7 @@ void encoder1LongPressCheck();
 void drawClock();
 
 void setup() {
+    
   Serial.begin(115200);
   delay(1000);
 
@@ -118,11 +126,19 @@ void setup() {
   matrix->setTextColor(messageColor);
   encoder1.begin();
   encoder2.begin();
+  
+  // Collect names and IDs of all animations, populate the animationInfoArray, used in web server
+  for (uint8_t i = 0; i < TOTAL_ANIMATIONS; ++i) {
+      animationInfoArray[i].id = i;
+      animationInfoArray[i].name = allAnimations[i].name;
+  }
+  setupWebServer();
 }
 
 void loop() {
   wm.process();
   checkTimeSync();
+  matrix->setBrightness(brightness);
 
   encoder1LongPressCheck();
 
@@ -137,6 +153,7 @@ void loop() {
   uint32_t delay_ms = (uint32_t)duration_units * 100.0f * (100.0f / (float)ANIMATION_SPEED);
 
   if (displayClock) {
+    lastAnimationChangeTime = millis(); // Reset animation change timer when in clock mode
     drawClock();
   }
   else {
@@ -156,7 +173,7 @@ void loop() {
   }
 
   // Check if it's time to auto-advance to the next animation
-  if (millis() - lastAnimationChangeTime >= animation_change_interval * 1000) {
+  if (!displayClock && millis() - lastAnimationChangeTime >= animation_change_interval * 1000) {
     lastAnimationChangeTime = millis();
 
     // Move to the next animation but only if auto-advance is enabled and animation is enabled
@@ -200,7 +217,7 @@ void loop() {
       // brightness += (enc2_counter/abs(enc2_counter)) * 5;
       brightness += enc2_counter * 5;
       brightness = minMax(brightness, 0, MAX_BRIGHTNESS);
-      matrix->setBrightness(brightness);
+      
       Serial.println("Brightness set to: " + String(brightness) + "%");
       showMessage(String(brightness) + "%", 1000);
 

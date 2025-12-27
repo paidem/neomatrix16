@@ -73,6 +73,11 @@ def generate_animation_header(file_path, base_name, width, height):
     durations_array_name = f"{base_name}Durations"
     struct_name = f"{base_name}Animation"
 
+    # Generate display name: underscores to spaces, capitalize each word
+    def make_display_name(basename):
+        return ' '.join(word.capitalize() for word in basename.replace('_', ' ').split())
+    animation_display_name = make_display_name(base_name)
+
     header_content = [
         f"// {base_name}.h - Auto-generated from {os.path.basename(file_path)}",
         f"#ifndef {HEADER_GUARD}",
@@ -99,6 +104,7 @@ def generate_animation_header(file_path, base_name, width, height):
 
     # Generate the Animation struct instance
     header_content.append(f"const Animation {struct_name} = {{")
+    header_content.append(f"  .name = \"{animation_display_name}\",")
     header_content.append(f"  .frameCount = {num_frames},")
     header_content.append(f"  .width = {width},")
     header_content.append(f"  .height = {height},")
@@ -169,6 +175,7 @@ with open(os.path.join(INCLUDE_DIR, "animation_types.h"), 'w') as f:
 #include <Arduino.h>
 
 typedef struct {
+    const char *name;
     const uint16_t frameCount;
     const uint8_t width; 
     const uint8_t height; 
