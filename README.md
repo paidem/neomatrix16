@@ -38,7 +38,7 @@ The system is controlled using two rotary encoders, each with an integrated push
 | Encoder | Rotation | Press  | Long Press | Pressed + Rotation Action |
 | :--- | :--- | :--- | :--- | :--- |
 | **Encoder 1 (Left)** | Switch the current animation or clock | Toggle automatic animation switching on/off | Switch betweeen animation and clock modes | N/A |
-| **Encoder 2 (Right)** | Change the auto-switch frequency (1–60 seconds) | Pause the animation at the current frame | N/A | Adjust overall brightness |
+| **Encoder 2 (Right)** | Change the auto-switch frequency (1–60 seconds) | Pause the animation at the current frame | Set brigtness to 0| Adjust overall brightness |
 
 ## Circuit
 
@@ -60,6 +60,17 @@ The circuit utilizes two rotary encoders and an external power supply for the LE
 | | Button ($S\text{W}$) | **GPIO 32** | `ENC2_BUTTON` | Data Input (internal pull-up recommended). |
 
 > 📌 **Note:** I used encoders which do not need power pins - only **GND** and **INPUT_PULLUP** type inputs.
+
+
+### Wifi control
+
+Using [tzapu/WiFiManager](https://github.com/tzapu/WiFiManager)
+Initially WiFi access point **NEOMATRIX_AP** will be available, where you can connect and configure your wifi connection. After this AP is unavailable.
+
+In the event Neomatrix cannot connect to Wifi in 30 seconds after boot - configuration AP will be available agein.
+
+IP address can be discovered from log on serial connection or from your router's DHCP status page. 
+On the web page you can select animation, contro animation auto advance and switch between animations/clock modes.
 
 ### Circuit Image
 

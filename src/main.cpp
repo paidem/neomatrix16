@@ -113,7 +113,7 @@ void setup() {
   wm.setConnectTimeout(30);
 
   Serial.println("Connecting to WiFi...");
-  if(wm.autoConnect("WIFI-CONFIG-AP")){
+  if(wm.autoConnect("NEOMATRIX_AP")){
       Serial.println("wiFi connected");
   }
   else {
