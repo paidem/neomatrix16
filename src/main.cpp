@@ -51,8 +51,8 @@ volatile bool autoAdvanceEnabled = true;
 volatile bool animationEnabled = true;
 
 // Forward declarations of ISR callback functions
-void IRAM_ATTR onEncoder1Button();
-void IRAM_ATTR onEncoder2Button();
+void onEncoder1Button();
+void onEncoder2Button();
 
 Encoder encoder1(ENC1_A, ENC1_B, ENC1_BUTTON, &enc1_counter, onEncoder1Button);
 Encoder encoder2(ENC2_A, ENC2_B, ENC2_BUTTON, &enc2_counter, onEncoder2Button);
